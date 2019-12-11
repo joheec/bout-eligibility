@@ -1,0 +1,4 @@
+import React from 'react';
+import RequirementsScreen from './RequirementsScreen';
+
+export default () => <RequirementsScreen title='Sat Feb 29, 2020 Eligiblity Requirements' />;
