@@ -12,9 +12,22 @@ import DateTimePicker from 'react-native-modal-datetime-picker';
 export default class RequirementsScreen extends Component {
   state = {
     showDatePicker: false,
+    pickerDate: new Date(),
   }
 
-  toggleDatePicker = () => this.setState({ showDatePicker: !this.state.showDatePicker });
+  openDatePicker = (date) => {
+    this.setState({
+      showDatePicker: true,
+      pickerDate: date ? date : new Date(),
+    });
+  };
+
+  closeDatePicker = () => {
+    this.setState({
+      showDatePicker: false,
+      pickerDate: new Date(),
+    });
+  };
 
   render() {
     return (
@@ -31,7 +44,7 @@ export default class RequirementsScreen extends Component {
               <Event
                 { ...status }
                 key={i}
-                toggleDatePicker={this.toggleDatePicker}
+                openDatePicker={() => this.openDatePicker(status.date)}
               />
             )
           }
@@ -43,7 +56,7 @@ export default class RequirementsScreen extends Component {
               <Event
                 { ...status }
                 key={i}
-                toggleDatePicker={this.toggleDatePicker}
+                openDatePicker={() => this.openDatePicker(status.date)}
               />
             )
           }
@@ -55,7 +68,7 @@ export default class RequirementsScreen extends Component {
               <Event
                 { ...status }
                 key={i}
-                toggleDatePicker={this.toggleDatePicker}
+                openDatePicker={() => this.openDatePicker(status.date)}
               />
             )
           }
@@ -70,9 +83,10 @@ export default class RequirementsScreen extends Component {
         </View>
         <DateTimePicker
           isVisible={this.state.showDatePicker}
-          onCancel={this.toggleDatePicker}
+          date={this.state.pickerDate}
+          onCancel={this.closeDatePicker}
           onConfirm={(date) => {
-            this.toggleDatePicker();
+            this.closeDatePicker();
           }}
         />
       </ScrollView>
@@ -85,7 +99,7 @@ const getFormattedDate = date => {
   return `${week} ${month} ${day} ${year}`
 };
 
-const Event = ({ date, signin, toggleDatePicker }) => {
+const Event = ({ date, signin, openDatePicker }) => {
   const displayDate = date
     ? getFormattedDate(date)
     : 'DDD MM-DD-YYYY';
@@ -95,7 +109,7 @@ const Event = ({ date, signin, toggleDatePicker }) => {
       <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text
           style={{ color: '#2e78b7' }}
-          onPress={toggleDatePicker}
+          onPress={openDatePicker}
         >{displayDate}</Text>
       </TouchableOpacity>
     </View>
