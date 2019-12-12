@@ -23,7 +23,7 @@ export default () => {
         signin: true,
         date: new Date('12/16/2019'),
       }, {
-        signin: true,
+        signin: false,
         date: null,
       },
     ],
@@ -35,10 +35,10 @@ export default () => {
         signin: true,
         date: new Date('12/21/2019'),
       }, {
-        signin: true,
+        signin: false,
         date: null,
       }, {
-        signin: true,
+        signin: false,
         date: null,
       },
     ],

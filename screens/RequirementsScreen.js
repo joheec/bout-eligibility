@@ -91,10 +91,7 @@ const Event = ({ status: { date, signin }, toggleDatePicker }) => {
     : 'DDD MM-DD-YYYY';
   return (
     <View style={{ flexDirection: 'row', marginVertical: 8 }}>
-      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-        <TouchableOpacity><Text style={styles.checkbox}>X</Text></TouchableOpacity>
-        <Text>Signed In? </Text>
-      </View>
+      <Checkbox isDone={signin} text="Signed In? " />
       <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text
           style={{ color: '#2e78b7' }}
@@ -108,10 +105,7 @@ const Event = ({ status: { date, signin }, toggleDatePicker }) => {
 const Hours = () => (
   <View style={{ flexDirection: 'row' }}>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <TouchableOpacity><Text style={styles.checkbox}>X</Text></TouchableOpacity>
-      <Text>In Vologistics?    </Text>
-    </View>
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+      <Checkbox text="In Vologistics?    " />
       <TouchableOpacity>
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>-</Text>
       </TouchableOpacity>
@@ -120,6 +114,13 @@ const Hours = () => (
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>+</Text>
       </TouchableOpacity>
     </View>
+  </View>
+);
+
+const Checkbox = ({ isDone, text }) => (
+  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    <TouchableOpacity><Text style={styles.checkbox}>{isDone ? 'X' : ''}</Text></TouchableOpacity>
+    <Text>{text}</Text>
   </View>
 );
 
