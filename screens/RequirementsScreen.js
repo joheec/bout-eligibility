@@ -29,8 +29,8 @@ export default class RequirementsScreen extends Component {
           {
             this.props.strategyHour.map((status, i) =>
               <Event
+                { ...status }
                 key={i}
-                status={status}
                 toggleDatePicker={this.toggleDatePicker}
               />
             )
@@ -41,8 +41,8 @@ export default class RequirementsScreen extends Component {
           {
             this.props.practice.map((status, i) =>
               <Event
+                { ...status }
                 key={i}
-                status={status}
                 toggleDatePicker={this.toggleDatePicker}
               />
             )
@@ -53,8 +53,8 @@ export default class RequirementsScreen extends Component {
           {
             this.props.scrimmage.map((status, i) =>
               <Event
+                { ...status }
                 key={i}
-                status={status}
                 toggleDatePicker={this.toggleDatePicker}
               />
             )
@@ -62,11 +62,11 @@ export default class RequirementsScreen extends Component {
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 1: Volunteer 6 Hours</Text>
-          <Hours />
+          <Hours {...this.props.volunteer1} />
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 2: Volunteer 6 Hours</Text>
-          <Hours />
+          <Hours {...this.props.volunteer2} />
         </View>
         <DateTimePicker
           isVisible={this.state.showDatePicker}
@@ -85,7 +85,7 @@ const getFormattedDate = date => {
   return `${week} ${month} ${day} ${year}`
 };
 
-const Event = ({ status: { date, signin }, toggleDatePicker }) => {
+const Event = ({ date, signin, toggleDatePicker }) => {
   const displayDate = date
     ? getFormattedDate(date)
     : 'DDD MM-DD-YYYY';
@@ -102,14 +102,14 @@ const Event = ({ status: { date, signin }, toggleDatePicker }) => {
   );
 };
 
-const Hours = () => (
+const Hours = ({ hours, vologistic }) => (
   <View style={{ flexDirection: 'row' }}>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Checkbox text="In Vologistics?    " />
+      <Checkbox isDone={vologistic} text="In Vologistics?    " />
       <TouchableOpacity>
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>-</Text>
       </TouchableOpacity>
-      <Text style={{ marginHorizontal: 20 }}>0</Text>
+      <Text style={{ marginHorizontal: 20 }}>{hours}</Text>
       <TouchableOpacity>
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>+</Text>
       </TouchableOpacity>
