@@ -24,14 +24,6 @@ export default function HomeScreen({ navigation }) {
               Wrecker vs Wrecker: Sat Feb 29, 2019
             </Text>
           </TouchableOpacity>
-          <Image
-            source={
-              __DEV__
-                ? require('../assets/images/robot-dev.png')
-                : require('../assets/images/robot-prod.png')
-            }
-            style={styles.welcomeImage}
-          />
         </View>
 
         <View style={styles.getStartedContainer}>
@@ -92,13 +84,8 @@ function DevelopmentModeNotice() {
         useful development tools. {learnMoreButton}
       </Text>
     );
-  } else {
-    return (
-      <Text style={styles.developmentModeText}>
-        You are not in development mode: your app will run at full speed.
-      </Text>
-    );
   }
+  return null;
 }
 
 function handleLearnMorePress() {
