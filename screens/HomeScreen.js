@@ -10,57 +10,24 @@ import {
   View,
 } from 'react-native';
 
-import { MonoText } from '../components/StyledText';
-
 export default function HomeScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
-        <View style={styles.welcomeContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Bout20200229', )} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Wrecker vs Wrecker: Sat Feb 29, 2019
+        <View style={styles.boutsContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate('Bout20200229', )}>
+            <Text style={styles.linkText}>
+              Sat Feb 29, 2019: Wrecker vs Wrecker
             </Text>
           </TouchableOpacity>
         </View>
-
-        <View style={styles.getStartedContainer}>
-          <DevelopmentModeNotice />
-
-          <Text style={styles.getStartedText}>Get started by opening</Text>
-
-          <View
-            style={[styles.codeHighlightContainer, styles.homeScreenFilename]}>
-            <MonoText>screens/HomeScreen.js</MonoText>
-          </View>
-
-          <Text style={styles.getStartedText}>
-            Change this text and your app will automatically reload.
-          </Text>
-        </View>
-
-        <View style={styles.helpContainer}>
-          <TouchableOpacity onPress={handleHelpPress} style={styles.helpLink}>
-            <Text style={styles.helpLinkText}>
-              Help, it didn’t automatically reload!
-            </Text>
-          </TouchableOpacity>
-        </View>
+        <DevelopmentModeNotice />
       </ScrollView>
-
       <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>
-          This is a tab bar. You can edit it in:
-        </Text>
-
-        <View
-          style={[styles.codeHighlightContainer, styles.navigationFilename]}>
-          <MonoText style={styles.codeHighlightText}>
-            navigation/MainTabNavigator.js
-          </MonoText>
-        </View>
+        <Text style={styles.tabBarInfoText}>Progress</Text>
+        <Text style={styles.tabBarInfoText}>Log Out</Text>
       </View>
     </View>
   );
@@ -73,16 +40,24 @@ HomeScreen.navigationOptions = {
 function DevelopmentModeNotice() {
   if (__DEV__) {
     const learnMoreButton = (
-      <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
+      <Text onPress={handleLearnMorePress} style={styles.linkText}>
         Learn more
       </Text>
     );
 
     return (
-      <Text style={styles.developmentModeText}>
-        Development mode is enabled: your app will be slower but you can use
-        useful development tools. {learnMoreButton}
-      </Text>
+      <View style={styles.getStartedContainer}>
+        <Text style={styles.developmentModeText}>
+          Development mode is enabled: your app will be slower but you can use useful development tools. {learnMoreButton}
+        </Text>
+        <View style={styles.helpContainer}>
+          <TouchableOpacity onPress={handleHelpPress}>
+            <Text style={styles.linkText}>
+              Help, it didn’t automatically reload!
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
     );
   }
   return null;
@@ -115,38 +90,14 @@ const styles = StyleSheet.create({
   contentContainer: {
     paddingTop: 30,
   },
-  welcomeContainer: {
+  boutsContainer: {
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 50,
     marginBottom: 20,
-  },
-  welcomeImage: {
-    width: 100,
-    height: 80,
-    resizeMode: 'contain',
-    marginTop: 3,
-    marginLeft: -10,
   },
   getStartedContainer: {
     alignItems: 'center',
     marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
   },
   tabBarInfoContainer: {
     position: 'absolute',
@@ -164,6 +115,8 @@ const styles = StyleSheet.create({
         elevation: 20,
       },
     }),
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
     alignItems: 'center',
     backgroundColor: '#fbfbfb',
     paddingVertical: 20,
@@ -173,18 +126,12 @@ const styles = StyleSheet.create({
     color: 'rgba(96,100,109, 1)',
     textAlign: 'center',
   },
-  navigationFilename: {
-    marginTop: 5,
-  },
   helpContainer: {
     marginTop: 15,
     alignItems: 'center',
   },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
+  linkText: {
+    fontSize: 20,
     color: '#2e78b7',
   },
 });
