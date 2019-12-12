@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {
-  Button,
   Platform,
   ScrollView,
   StyleSheet,
@@ -27,22 +26,39 @@ export default class RequirementsScreen extends Component {
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Saturday GLW Strategy Hour</Text>
-          <Event toggleDatePicker={this.toggleDatePicker} />
-          <Event toggleDatePicker={this.toggleDatePicker} />
-          <Event toggleDatePicker={this.toggleDatePicker} />
+          {
+            this.props.strategyHour.map((status, i) =>
+              <Event
+                key={i}
+                status={status}
+                toggleDatePicker={this.toggleDatePicker}
+              />
+            )
+          }
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Any Practice</Text>
-          <Event toggleDatePicker={this.toggleDatePicker} />
-          <Event toggleDatePicker={this.toggleDatePicker} />
-          <Event toggleDatePicker={this.toggleDatePicker} />
+          {
+            this.props.practice.map((status, i) =>
+              <Event
+                key={i}
+                status={status}
+                toggleDatePicker={this.toggleDatePicker}
+              />
+            )
+          }
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Scrimmages</Text>
-          <Event toggleDatePicker={this.toggleDatePicker} />
-          <Event toggleDatePicker={this.toggleDatePicker} />
-          <Event toggleDatePicker={this.toggleDatePicker} />
-          <Event toggleDatePicker={this.toggleDatePicker} />
+          {
+            this.props.scrimmage.map((status, i) =>
+              <Event
+                key={i}
+                status={status}
+                toggleDatePicker={this.toggleDatePicker}
+              />
+            )
+          }
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 1: Volunteer 6 Hours</Text>
@@ -56,7 +72,6 @@ export default class RequirementsScreen extends Component {
           isVisible={this.state.showDatePicker}
           onCancel={this.toggleDatePicker}
           onConfirm={(date) => {
-            console.log(date);
             this.toggleDatePicker();
           }}
         />
@@ -65,22 +80,36 @@ export default class RequirementsScreen extends Component {
   }
 }
 
-const Event = ({ toggleDatePicker }) => (
-  <View>
-    <TouchableOpacity>
-      <Text
-        style={{ color: '#2e78b7' }}
-        onPress={toggleDatePicker}
-      >DDD MM-DD-YYYY</Text>
-    </TouchableOpacity>
-  </View>
-);
+const getFormattedDate = date => {
+  const [week, month, day, year] = date.toString().split(' ');
+  return `${week} ${month} ${day} ${year}`
+};
+
+const Event = ({ status: { date, signin }, toggleDatePicker }) => {
+  const displayDate = date
+    ? getFormattedDate(date)
+    : 'DDD MM-DD-YYYY';
+  return (
+    <View style={{ flexDirection: 'row', marginVertical: 8 }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <TouchableOpacity><Text style={styles.checkbox}>X</Text></TouchableOpacity>
+        <Text>Signed In? </Text>
+      </View>
+      <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Text
+          style={{ color: '#2e78b7' }}
+          onPress={toggleDatePicker}
+        >{displayDate}</Text>
+      </TouchableOpacity>
+    </View>
+  );
+};
 
 const Hours = () => (
-  <View style={{ flexDirection: 'row', justifyContent: 'space-evenly' }}>
+  <View style={{ flexDirection: 'row' }}>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <TouchableOpacity><Text style={styles.checkbox}>X</Text></TouchableOpacity>
-      <Text>In Vologistics?</Text>
+      <Text>In Vologistics?    </Text>
     </View>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
       <TouchableOpacity>
