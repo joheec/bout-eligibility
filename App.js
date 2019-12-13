@@ -1,7 +1,17 @@
 import { AppLoading } from 'expo';
-import React, { useState } from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import React, { Component, useState } from 'react';
+import {
+  Button,
+  Platform,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
 import { createAppContainer, createStackNavigator } from 'react-navigation';
+
+import AuthService from './src/services/Auth';
+
 import HomeScreen from './src/screens/HomeScreen';
 import Bout20200229Screen from './src/screens/20200229';
 
@@ -12,24 +22,44 @@ const RequirementsStack = createStackNavigator({
 
 const AppNavigator = createAppContainer(RequirementsStack);
 
-export default function App(props) {
-  const [isLoadingComplete, setLoadingComplete] = useState(false);
+export default class App extends Component {
+  state = {
+    isLoadingComplete: false,
+    user: null,
+  };
 
-  if (!isLoadingComplete && !props.skipLoadingScreen) {
-    return (
-      <AppLoading
-        startAsync={loadResourcesAsync}
-        onError={handleLoadingError}
-        onFinish={() => handleFinishLoading(setLoadingComplete)}
-      />
-    );
-  } else {
-    return (
-      <View style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <AppNavigator />
-      </View>
-    );
+  setLoadingComplete = (isLoadingComplete) => {
+    this.setState({ isLoadingComplete });
+  };
+
+  componentDidMount() {
+    AuthService.subscribeAuthChange(user => this.setState({ user }));
+  }
+
+  render() {
+    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+      return (
+        <AppLoading
+          startAsync={loadResourcesAsync}
+          onError={handleLoadingError}
+          onFinish={() => handleFinishLoading(this.setLoadingComplete)}
+        />
+      );
+    } else if (!this.state.user) {
+      return (
+        <View style={{ flex: 1, backgroundColor: "#fff", alignItems: "center", justifyContent: "center" }}>
+          <Text>Welcome!</Text>
+          <Button onPress={AuthService.loginWithFacebook} title="Login with Facebook" />
+        </View>
+      );
+    } else {
+      return (
+        <View style={styles.container}>
+          {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
+          <AppNavigator />
+        </View>
+      );
+    }
   }
 }
 
