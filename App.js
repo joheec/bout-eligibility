@@ -5,9 +5,13 @@ import { Platform, StatusBar, StyleSheet, View } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 
 import { createAppContainer, createStackNavigator } from 'react-navigation';
+import LoginScreen from './src/screens/LoginScreen';
 import HomeScreen from './screens/HomeScreen';
 import Bout20200229Screen from './screens/20200229';
+import AuthService from './src/services/Auth';
+
 const RequirementsStack = createStackNavigator({
+  Login: { screen: LoginScreen },
   Home: { screen: HomeScreen },
   Bout20200229: {screen: Bout20200229Screen }
 });

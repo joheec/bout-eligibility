@@ -26,7 +26,6 @@ export default function HomeScreen({ navigation }) {
         <DevelopmentModeNotice />
       </ScrollView>
       <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>Progress</Text>
         <Text style={styles.tabBarInfoText}>Log Out</Text>
       </View>
     </View>
