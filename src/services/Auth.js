@@ -4,16 +4,15 @@ import { Firebase } from '../integrations/firebase';
 
 export default class AuthService {
   static async loginWithFacebook() {
-    console.log({ config, appId: config.facebook.appId });
-    console.log(Facebook);
     try {
+      await Facebook.initializeAsync(config.facebook.appId);
       const {
         type,
         token,
         expires,
         permissions,
         declinedPermissions,
-      } = await Facebook.logInWithReadPermissionsAsync(config.facebook.appId, {
+      } = await Facebook.logInWithReadPermissionsAsync({
         permissions: ['public_profile']
       });
 
@@ -21,7 +20,7 @@ export default class AuthService {
         // const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
         // Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
         const credential = Firebase.auth.FacebookAuthProvider.credential(token);
-        await Firebase.auth().signInAndRetrieveDataWithCredential(credential);
+        await Firebase.auth().signInWithCredential(credential);
       }
     } catch ({ message }) {
       alert(`Facebook Login Error: ${message}`);
@@ -30,5 +29,9 @@ export default class AuthService {
 
   static subscribeAuthChange(callback) {
     Firebase.auth().onAuthStateChanged(callback);
+  }
+
+  static async logout() {
+    return Firebase.auth().signOut();
   }
 }

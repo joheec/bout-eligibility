@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
+import AuthService from '../services/Auth';
 
 export default function HomeScreen({ navigation }) {
   return (
@@ -25,10 +26,9 @@ export default function HomeScreen({ navigation }) {
         </View>
         <DevelopmentModeNotice />
       </ScrollView>
-      <View style={styles.tabBarInfoContainer}>
-        <Text style={styles.tabBarInfoText}>Progress</Text>
+      <TouchableOpacity onPress={AuthService.logout} style={styles.tabBarInfoContainer}>
         <Text style={styles.tabBarInfoText}>Log Out</Text>
-      </View>
+      </TouchableOpacity>
     </View>
   );
 }
