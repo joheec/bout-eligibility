@@ -17,8 +17,6 @@ export default class AuthService {
       });
 
       if (type === 'success' && token) {
-        // const response = await fetch(`https://graph.facebook.com/me?access_token=${token}`);
-        // Alert.alert('Logged in!', `Hi ${(await response.json()).name}!`);
         const credential = Firebase.auth.FacebookAuthProvider.credential(token);
         await Firebase.auth().signInWithCredential(credential);
       }

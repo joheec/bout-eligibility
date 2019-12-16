@@ -11,18 +11,26 @@ import {
 } from 'react-native';
 import AuthService from '../services/Auth';
 
-export default function HomeScreen({ navigation }) {
+export default function HomeScreen({ navigation, screenProps }) {
+  const bouts = Object.keys(screenProps);
   return (
     <View style={styles.container}>
       <ScrollView
         style={styles.container}
         contentContainerStyle={styles.contentContainer}>
         <View style={styles.boutsContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate('Bout20200229', )}>
-            <Text style={styles.linkText}>
-              Sat Feb 29, 2019: Wrecker vs Wrecker
-            </Text>
-          </TouchableOpacity>
+          {
+            bouts.map(boutDate => (
+              <TouchableOpacity
+                key={boutDate}
+                onPress={() => navigation.navigate('Bout' + boutDate)}
+              >
+                <Text style={styles.linkText}>
+                  Sat Feb 29, 2019: Wrecker vs Wrecker
+                </Text>
+              </TouchableOpacity>
+            ))
+          }
         </View>
         <DevelopmentModeNotice />
       </ScrollView>

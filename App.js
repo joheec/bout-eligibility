@@ -1,4 +1,3 @@
-import { AppLoading } from 'expo';
 import React, { Component, useState } from 'react';
 import {
   Button,
@@ -11,6 +10,7 @@ import {
 import { createAppContainer, createStackNavigator } from 'react-navigation';
 
 import AuthService from './src/services/Auth';
+import DatabaseService from './src/services/Database';
 
 import HomeScreen from './src/screens/HomeScreen';
 import Bout20200229Screen from './src/screens/20200229';
@@ -24,57 +24,74 @@ const AppNavigator = createAppContainer(RequirementsStack);
 
 export default class App extends Component {
   state = {
-    isLoadingComplete: false,
+    erred: false,
+    isLoading: false,
+    progress: {},
     user: null,
+    unsubscribe: null,
   };
 
   setLoadingComplete = (isLoadingComplete) => {
     this.setState({ isLoadingComplete });
   };
 
+  getUserData = () => {
+    this.setState({ isLoading: true });
+    AuthService.loginWithFacebook();
+  }
+
   componentDidMount() {
-    AuthService.subscribeAuthChange(user => this.setState({ user }));
+    this.setState({
+      unsubscribe: AuthService.subscribeAuthChange(user => {
+        this.setState({ user });
+        if (user && user.uid) {
+          DatabaseService.getEligibility(user.uid)
+          .then((progress) => {
+            this.setState({
+              isLoading: false,
+              progress,
+            });
+          })
+        }
+      }),
+    });
+  }
+
+  componentWillUnmount() {
+    if (this.state.unsubscribe) {
+      this.state.unsubscribe();
+    }
+  }
+
+  static getDerivedStateFromError() {
+    this.setState({ erred: true });
   }
 
   render() {
-    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+    if (this.state.erred) {
+      return <Text>Oops! Something went wrong.</Text>;
+    } else if (this.state.isLoading) {
       return (
-        <AppLoading
-          startAsync={loadResourcesAsync}
-          onError={handleLoadingError}
-          onFinish={() => handleFinishLoading(this.setLoadingComplete)}
-        />
+        <View style={{ flex:1, backgroundColor: "#fff", alignItems: "center", justifyContent: "center" }}>
+          <Text>Loading...</Text>
+        </View>
       );
     } else if (!this.state.user) {
       return (
         <View style={{ flex: 1, backgroundColor: "#fff", alignItems: "center", justifyContent: "center" }}>
           <Text>Welcome!</Text>
-          <Button onPress={AuthService.loginWithFacebook} title="Login with Facebook" />
+          <Button onPress={this.getUserData} title="Login with Facebook" />
         </View>
       );
     } else {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator />
+          <AppNavigator screenProps={this.state.progress} />
         </View>
       );
     }
   }
-}
-
-async function loadResourcesAsync() {
-  await Promise.all([]);
-}
-
-function handleLoadingError(error) {
-  // In this case, you might want to report the error to your error reporting
-  // service, for example Sentry
-  console.warn(error);
-}
-
-function handleFinishLoading(setLoadingComplete) {
-  setLoadingComplete(true);
 }
 
 const styles = StyleSheet.create({
