@@ -97,14 +97,14 @@ export default class RequirementsScreen extends Component {
           <Text>Month 1: Volunteer 6 Hours</Text>
           <Hours
             {...this.props.volunteer1}
-            onUpdate={this.onUpdate(this.props.boutDate, 'volunteer1')}
+            onUpdate={this.onUpdate(this.props.boutDate, 'volunteer1', 'vologistic')}
           />
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 2: Volunteer 6 Hours</Text>
           <Hours
             {...this.props.volunteer2}
-            onUpdate={this.onUpdate(this.props.boutDate, 'volunteer2')}
+            onUpdate={this.onUpdate(this.props.boutDate, 'volunteer2', 'vologistic')}
           />
         </View>
         <DateTimePicker
@@ -134,7 +134,7 @@ const Event = ({ date, signin, openDatePicker, onUpdate }) => {
       <Checkbox
         isDone={signin}
         text="Signed In? "
-        onUpdate={onUpdate}
+        onUpdate={() => onUpdate({ signin: !signin })}
       />
       <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text
@@ -146,10 +146,14 @@ const Event = ({ date, signin, openDatePicker, onUpdate }) => {
   );
 };
 
-const Hours = ({ hours, vologistic }) => (
+const Hours = ({ hours, vologistic, onUpdate }) => (
   <View style={{ flexDirection: 'row' }}>
     <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Checkbox isDone={vologistic} text="In Vologistics?    " />
+      <Checkbox
+        isDone={vologistic}
+        text="In Vologistics?    "
+        onUpdate={() => onUpdate(!vologistic)}
+      />
       <TouchableOpacity>
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>-</Text>
       </TouchableOpacity>
@@ -163,7 +167,7 @@ const Hours = ({ hours, vologistic }) => (
 
 const Checkbox = ({ isDone, onUpdate, text }) => (
   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-    <TouchableOpacity onPress={() => onUpdate({ signin: !isDone })}>
+    <TouchableOpacity onPress={onUpdate}>
       <Text style={styles.checkbox}>{isDone ? 'X' : ''}</Text>
     </TouchableOpacity>
     <Text>{text}</Text>
