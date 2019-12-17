@@ -36,11 +36,11 @@ export default class RequirementsScreen extends Component {
 
   updateDate = (date) => {
     this.closeDatePicker();
-    this.onUpdate(this.state.dateRequirement, this.state.dateSubRequirement)
+    this.onUpdate(this.state.dateRequirement)(this.state.dateSubRequirement)
       ({ date: date.toJSON() });
   };
 
-  onUpdate = (requirement, subRequirement) => (value) => {
+  onUpdate = (requirement) => (subRequirement) => (value) => {
     // end erred
     // start loading
     DatabaseService.postEligibility(this.props.boutDate, {
@@ -72,7 +72,7 @@ export default class RequirementsScreen extends Component {
                 { ...status }
                 key={i}
                 openDatePicker={() => this.openDatePicker('strategyHour', i, status.date)}
-                onUpdate={this.onUpdate('strategyHour', i)}
+                onUpdate={this.onUpdate('strategyHour')(i)}
               />
             )
           }
@@ -85,7 +85,7 @@ export default class RequirementsScreen extends Component {
                 { ...status }
                 key={i}
                 openDatePicker={() => this.openDatePicker('practice', i, status.date)}
-                onUpdate={this.onUpdate('practice', i)}
+                onUpdate={this.onUpdate('practice')(i)}
               />
             )
           }
@@ -98,7 +98,7 @@ export default class RequirementsScreen extends Component {
                 { ...status }
                 key={i}
                 openDatePicker={() => this.openDatePicker('scrimmage', i, status.date)}
-                onUpdate={this.onUpdate('scrimmage', i)}
+                onUpdate={this.onUpdate('scrimmage')(i)}
               />
             )
           }
@@ -107,14 +107,14 @@ export default class RequirementsScreen extends Component {
           <Text>Month 1: Volunteer 6 Hours</Text>
           <Hours
             {...this.props.volunteer1}
-            onUpdate={this.onUpdate('volunteer1', 'vologistic')}
+            onUpdate={this.onUpdate('volunteer1')}
           />
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 2: Volunteer 6 Hours</Text>
           <Hours
             {...this.props.volunteer2}
-            onUpdate={this.onUpdate('volunteer2', 'vologistic')}
+            onUpdate={this.onUpdate('volunteer2')}
           />
         </View>
         <DateTimePicker
@@ -155,13 +155,13 @@ const Hours = ({ hours, vologistic, onUpdate }) => (
       <Checkbox
         isDone={vologistic}
         text="In Vologistics?    "
-        onUpdate={() => onUpdate(!vologistic)}
+        onUpdate={() => onUpdate('vologistic')(!vologistic)}
       />
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => onUpdate('hours')(hours-1)}>
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>-</Text>
       </TouchableOpacity>
       <Text style={{ marginHorizontal: 20 }}>{hours}</Text>
-      <TouchableOpacity>
+      <TouchableOpacity onPress={() => onUpdate('hours')(hours+1)}>
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>+</Text>
       </TouchableOpacity>
     </View>
