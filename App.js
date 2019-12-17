@@ -1,5 +1,6 @@
 import React, { Component, useState } from 'react';
 import {
+  ActivityIndicator,
   Button,
   Platform,
   StatusBar,
@@ -41,6 +42,7 @@ export default class App extends Component {
     const unsubscribeAuthChange = AuthService.subscribeAuthChange(user => {
       this.setState({ user });
       if (user && user.uid) {
+        this.setState({ isLoading: true });
         DatabaseService.getEligibility(user.uid)
           .then(() => this.setState({ isLoading: false, erred: false }))
           .catch(err => this.setState({ isLoading: false, erred: true }));
@@ -69,7 +71,7 @@ export default class App extends Component {
     } else if (this.state.isLoading) {
       return (
         <View style={styles.message}>
-          <Text>Loading...</Text>
+          <ActivityIndicator size="large" color="#0000ff" />
         </View>
       );
     } else if (!this.state.user) {

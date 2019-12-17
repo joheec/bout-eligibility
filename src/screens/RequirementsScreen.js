@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  ActivityIndicator,
   Platform,
   ScrollView,
   StyleSheet,
@@ -12,6 +13,7 @@ import DatabaseService from '../services/Database';
 
 export default class RequirementsScreen extends Component {
   state = {
+    isLoading: false,
     dateRequirement: null,
     dateSubRequirement: null,
     showDatePicker: false,
@@ -42,14 +44,14 @@ export default class RequirementsScreen extends Component {
 
   onUpdate = (requirement) => (subRequirement) => (value) => {
     // end erred
-    // start loading
+    this.setState({ isLoading: true });
     DatabaseService.postEligibility(this.props.boutDate, {
       requirement,
       subRequirement,
       value
     })
     .then(() => {
-      // end loading
+      this.setState({ isLoading: false });
     })
     .catch((err) => {
       // start erred
@@ -57,6 +59,13 @@ export default class RequirementsScreen extends Component {
   };
 
   render() {
+    if (this.state.isLoading) {
+      return (
+        <View style={{ marginTop: 50 }}>
+          <ActivityIndicator size="large" color="#0000ff" />
+        </View>
+      );
+    }
     return (
       <ScrollView style={styles.container}>
         <View style={{ marginBottom: 15 }}>
