@@ -12,14 +12,18 @@ import DatabaseService from '../services/Database';
 
 export default class RequirementsScreen extends Component {
   state = {
+    dateRequirement: null,
+    dateSubRequirement: null,
     showDatePicker: false,
     pickerDate: new Date(),
   }
 
-  openDatePicker = (date) => {
+  openDatePicker = (dateRequirement, dateSubRequirement, date) => {
     this.setState({
+      dateRequirement,
+      dateSubRequirement,
       showDatePicker: true,
-      pickerDate: date ? date : new Date(),
+      pickerDate: date ? new Date(date) : new Date(),
     });
   };
 
@@ -30,10 +34,16 @@ export default class RequirementsScreen extends Component {
     });
   };
 
-  onUpdate = (boutDate, requirement, subRequirement) => (value) => {
+  updateDate = (date) => {
+    this.closeDatePicker();
+    this.onUpdate(this.state.dateRequirement, this.state.dateSubRequirement)
+      ({ date: date.toJSON() });
+  };
+
+  onUpdate = (requirement, subRequirement) => (value) => {
     // end erred
     // start loading
-    DatabaseService.postEligibility(boutDate, {
+    DatabaseService.postEligibility(this.props.boutDate, {
       requirement,
       subRequirement,
       value
@@ -61,8 +71,8 @@ export default class RequirementsScreen extends Component {
               <Event
                 { ...status }
                 key={i}
-                openDatePicker={() => this.openDatePicker(status.date)}
-                onUpdate={this.onUpdate(this.props.boutDate, 'strategyHour', i)}
+                openDatePicker={() => this.openDatePicker('strategyHour', i, status.date)}
+                onUpdate={this.onUpdate('strategyHour', i)}
               />
             )
           }
@@ -74,8 +84,8 @@ export default class RequirementsScreen extends Component {
               <Event
                 { ...status }
                 key={i}
-                openDatePicker={() => this.openDatePicker(status.date)}
-                onUpdate={this.onUpdate(this.props.boutDate, 'practice', i)}
+                openDatePicker={() => this.openDatePicker('practice', i, status.date)}
+                onUpdate={this.onUpdate('practice', i)}
               />
             )
           }
@@ -87,8 +97,8 @@ export default class RequirementsScreen extends Component {
               <Event
                 { ...status }
                 key={i}
-                openDatePicker={() => this.openDatePicker(status.date)}
-                onUpdate={this.onUpdate(this.props.boutDate, 'scrimmage', i)}
+                openDatePicker={() => this.openDatePicker('scrimmage', i, status.date)}
+                onUpdate={this.onUpdate('scrimmage', i)}
               />
             )
           }
@@ -97,37 +107,30 @@ export default class RequirementsScreen extends Component {
           <Text>Month 1: Volunteer 6 Hours</Text>
           <Hours
             {...this.props.volunteer1}
-            onUpdate={this.onUpdate(this.props.boutDate, 'volunteer1', 'vologistic')}
+            onUpdate={this.onUpdate('volunteer1', 'vologistic')}
           />
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 2: Volunteer 6 Hours</Text>
           <Hours
             {...this.props.volunteer2}
-            onUpdate={this.onUpdate(this.props.boutDate, 'volunteer2', 'vologistic')}
+            onUpdate={this.onUpdate('volunteer2', 'vologistic')}
           />
         </View>
         <DateTimePicker
           isVisible={this.state.showDatePicker}
           date={this.state.pickerDate}
           onCancel={this.closeDatePicker}
-          onConfirm={(date) => {
-            this.closeDatePicker();
-          }}
+          onConfirm={this.updateDate}
         />
       </ScrollView>
     );
   }
 }
 
-const getFormattedDate = date => {
-  const [week, month, day, year] = date.toString().split(' ');
-  return `${week} ${month} ${day} ${year}`
-};
-
 const Event = ({ date, signin, openDatePicker, onUpdate }) => {
   const displayDate = date
-    ? getFormattedDate(date)
+    ? new Date(date).toDateString()
     : 'DDD MM-DD-YYYY';
   return (
     <View style={{ flexDirection: 'row', marginVertical: 8 }}>
