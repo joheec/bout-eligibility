@@ -20,6 +20,7 @@ export default class AuthService {
         const credential = Firebase.auth.FacebookAuthProvider.credential(token);
         await Firebase.auth().signInWithCredential(credential);
       }
+      return { isLoading: false };
     } catch ({ message }) {
       alert(`Facebook Login Error: ${message}`);
     }

@@ -1,6 +1,7 @@
 import React, { Component, useState } from 'react';
 import {
   ActivityIndicator,
+  Alert,
   Button,
   Platform,
   StatusBar,
@@ -25,16 +26,24 @@ const AppNavigator = createAppContainer(RequirementsStack);
 
 export default class App extends Component {
   state = {
-    erred: false,
     isLoading: false,
     progress: {},
     user: null,
     subscriptions: [],
   };
 
+  showAlert = (message) => {
+    Alert.alert('Something Went Wrong', message);
+  }
+
   getUserData = () => {
     this.setState({ isLoading: true });
-    AuthService.loginWithFacebook();
+    AuthService.loginWithFacebook()
+      .then(isLoading => this.setState(isLoading))
+      .catch(err => {
+        this.setState({ isLoading: false });
+        this.showAlert('While logging into Facebook...');
+      });
   }
 
   componentDidMount() {
@@ -44,8 +53,11 @@ export default class App extends Component {
       if (user && user.uid) {
         this.setState({ isLoading: true });
         DatabaseService.getEligibility(user.uid)
-          .then(() => this.setState({ isLoading: false, erred: false }))
-          .catch(err => this.setState({ isLoading: false, erred: true }));
+          .then(() => this.setState({ isLoading: false }))
+          .catch(err => {
+            this.setState({ isLoading: false });
+            this.showAlert('While getting your bout eligibility info...');
+          });
       }
     });
     this.setState({ subscriptions: [unsubscribeDatabaseChange, unsubscribeAuthChange] });
@@ -58,17 +70,11 @@ export default class App extends Component {
   }
 
   static getDerivedStateFromError() {
-    this.setState({ erred: true });
+    this.showAlert('While getting derived state for app...');
   }
 
   render() {
-    if (this.state.erred) {
-      return (
-        <View style={styles.message}>
-          <Text>Oops! Something went wrong.</Text>
-        </View>
-      );
-    } else if (this.state.isLoading) {
+    if (this.state.isLoading) {
       return (
         <View style={styles.message}>
           <ActivityIndicator size="large" color="#0000ff" />

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+  Alert,
   ActivityIndicator,
   Platform,
   ScrollView,
@@ -43,7 +44,6 @@ export default class RequirementsScreen extends Component {
   };
 
   onUpdate = (requirement) => (subRequirement) => (value) => {
-    // end erred
     this.setState({ isLoading: true });
     DatabaseService.postEligibility(this.props.boutDate, {
       requirement,
@@ -54,7 +54,7 @@ export default class RequirementsScreen extends Component {
       this.setState({ isLoading: false });
     })
     .catch((err) => {
-      // start erred
+      Alert.alert('Something Went Wrong', 'While updating your eligibility...');
     })
   };
 
