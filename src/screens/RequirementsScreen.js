@@ -8,6 +8,7 @@ import {
   View,
 } from 'react-native';
 import DateTimePicker from 'react-native-modal-datetime-picker';
+import DatabaseService from '../services/Database';
 
 export default class RequirementsScreen extends Component {
   state = {
@@ -29,6 +30,22 @@ export default class RequirementsScreen extends Component {
     });
   };
 
+  onUpdate = (boutDate, requirement, subRequirement) => (value) => {
+    // end erred
+    // start loading
+    DatabaseService.postEligibility(boutDate, {
+      requirement,
+      subRequirement,
+      value
+    })
+    .then(() => {
+      // end loading
+    })
+    .catch((err) => {
+      // start erred
+    })
+  };
+
   render() {
     return (
       <ScrollView style={styles.container}>
@@ -45,6 +62,7 @@ export default class RequirementsScreen extends Component {
                 { ...status }
                 key={i}
                 openDatePicker={() => this.openDatePicker(status.date)}
+                onUpdate={this.onUpdate(this.props.boutDate, 'strategyHour', i)}
               />
             )
           }
@@ -57,6 +75,7 @@ export default class RequirementsScreen extends Component {
                 { ...status }
                 key={i}
                 openDatePicker={() => this.openDatePicker(status.date)}
+                onUpdate={this.onUpdate(this.props.boutDate, 'practice', i)}
               />
             )
           }
@@ -69,17 +88,24 @@ export default class RequirementsScreen extends Component {
                 { ...status }
                 key={i}
                 openDatePicker={() => this.openDatePicker(status.date)}
+                onUpdate={this.onUpdate(this.props.boutDate, 'scrimmage', i)}
               />
             )
           }
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 1: Volunteer 6 Hours</Text>
-          <Hours {...this.props.volunteer1} />
+          <Hours
+            {...this.props.volunteer1}
+            onUpdate={this.onUpdate(this.props.boutDate, 'volunteer1')}
+          />
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 2: Volunteer 6 Hours</Text>
-          <Hours {...this.props.volunteer2} />
+          <Hours
+            {...this.props.volunteer2}
+            onUpdate={this.onUpdate(this.props.boutDate, 'volunteer2')}
+          />
         </View>
         <DateTimePicker
           isVisible={this.state.showDatePicker}
@@ -99,13 +125,17 @@ const getFormattedDate = date => {
   return `${week} ${month} ${day} ${year}`
 };
 
-const Event = ({ date, signin, openDatePicker }) => {
+const Event = ({ date, signin, openDatePicker, onUpdate }) => {
   const displayDate = date
     ? getFormattedDate(date)
     : 'DDD MM-DD-YYYY';
   return (
     <View style={{ flexDirection: 'row', marginVertical: 8 }}>
-      <Checkbox isDone={signin} text="Signed In? " />
+      <Checkbox
+        isDone={signin}
+        text="Signed In? "
+        onUpdate={onUpdate}
+      />
       <TouchableOpacity style={{ flexDirection: 'row', alignItems: 'center' }}>
         <Text
           style={{ color: '#2e78b7' }}
@@ -131,9 +161,11 @@ const Hours = ({ hours, vologistic }) => (
   </View>
 );
 
-const Checkbox = ({ isDone, text }) => (
+const Checkbox = ({ isDone, onUpdate, text }) => (
   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-    <TouchableOpacity><Text style={styles.checkbox}>{isDone ? 'X' : ''}</Text></TouchableOpacity>
+    <TouchableOpacity onPress={() => onUpdate({ signin: !isDone })}>
+      <Text style={styles.checkbox}>{isDone ? 'X' : ''}</Text>
+    </TouchableOpacity>
     <Text>{text}</Text>
   </View>
 );

@@ -28,11 +28,7 @@ export default class App extends Component {
     isLoading: false,
     progress: {},
     user: null,
-    unsubscribe: null,
-  };
-
-  setLoadingComplete = (isLoadingComplete) => {
-    this.setState({ isLoadingComplete });
+    subscriptions: [],
   };
 
   getUserData = () => {
@@ -41,25 +37,21 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    this.setState({
-      unsubscribe: AuthService.subscribeAuthChange(user => {
-        this.setState({ user });
-        if (user && user.uid) {
-          DatabaseService.getEligibility(user.uid)
-          .then((progress) => {
-            this.setState({
-              isLoading: false,
-              progress,
-            });
-          })
-        }
-      }),
+    const unsubscribeDatabaseChange = DatabaseService.subscribe(data => this.setState({ progress: data }));
+    const unsubscribeAuthChange = AuthService.subscribeAuthChange(user => {
+      this.setState({ user });
+      if (user && user.uid) {
+        DatabaseService.getEligibility(user.uid)
+          .then(() => this.setState({ isLoading: false, erred: false }))
+          .catch(err => this.setState({ isLoading: false, erred: true }));
+      }
     });
+    this.setState({ subscriptions: [unsubscribeDatabaseChange, unsubscribeAuthChange] });
   }
 
   componentWillUnmount() {
-    if (this.state.unsubscribe) {
-      this.state.unsubscribe();
+    if (this.state.subscriptions.length > 0) {
+      this.state.subscriptions.map(unsubscribe => unsubscribe());
     }
   }
 
@@ -69,16 +61,20 @@ export default class App extends Component {
 
   render() {
     if (this.state.erred) {
-      return <Text>Oops! Something went wrong.</Text>;
+      return (
+        <View style={styles.message}>
+          <Text>Oops! Something went wrong.</Text>
+        </View>
+      );
     } else if (this.state.isLoading) {
       return (
-        <View style={{ flex:1, backgroundColor: "#fff", alignItems: "center", justifyContent: "center" }}>
+        <View style={styles.message}>
           <Text>Loading...</Text>
         </View>
       );
     } else if (!this.state.user) {
       return (
-        <View style={{ flex: 1, backgroundColor: "#fff", alignItems: "center", justifyContent: "center" }}>
+        <View style={styles.message}>
           <Text>Welcome!</Text>
           <Button onPress={this.getUserData} title="Login with Facebook" />
         </View>
@@ -98,5 +94,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  message: {
+    flex: 1,
+    backgroundColor: "#fff",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

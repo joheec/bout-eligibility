@@ -26,7 +26,7 @@ export default class AuthService {
   }
 
   static subscribeAuthChange(callback) {
-    Firebase.auth().onAuthStateChanged(callback);
+    return Firebase.auth().onAuthStateChanged(callback);
   }
 
   static async logout() {
