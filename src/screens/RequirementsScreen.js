@@ -14,12 +14,6 @@ import {
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import DatabaseService from '../services/Database';
 
-function wait(timeout) {
-  return new Promise(resolve => {
-    setTimeout(resolve, timeout);
-  });
-}
-
 export default class RequirementsScreen extends Component {
   state = {
     isLoading: false,
@@ -34,7 +28,7 @@ export default class RequirementsScreen extends Component {
 
   onRefresh = () => {
     this.setRefreshing(true);
-    wait(2000).then(() => this.setRefreshing(false));
+    DatabaseService.getEligibility().then(() => this.setRefreshing(false));
   };
 
   openDatePicker = (dateRequirement, dateSubRequirement, date) => {

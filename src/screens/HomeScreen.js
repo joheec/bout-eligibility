@@ -12,19 +12,14 @@ import {
   View,
 } from 'react-native';
 import AuthService from '../services/Auth';
+import DatabaseService from '../services/Database';
 
 export default function HomeScreen({ navigation, screenProps }) {
   const [refreshing, setRefreshing] = React.useState(false);
 
-  function wait(timeout) {
-    return new Promise(resolve => {
-      setTimeout(resolve, timeout);
-    });
-  }
-
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    wait(2000).then(() => setRefreshing(false));
+    DatabaseService.getEligibility().then(() => setRefreshing(false));
   }, [refreshing]);
 
   const bouts = Object.keys(screenProps);

@@ -52,7 +52,8 @@ export default class App extends Component {
       this.setState({ user });
       if (user && user.uid) {
         this.setState({ isLoading: true });
-        DatabaseService.getEligibility(user.uid)
+        DatabaseService.setUserId(user.uid);
+        DatabaseService.getEligibility()
           .then(() => this.setState({ isLoading: false }))
           .catch(err => {
             this.setState({ isLoading: false });

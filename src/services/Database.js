@@ -5,6 +5,9 @@ export default class DatabaseService {
   static userId;
   static callbacks = [];
 
+  static setUserId(uid) {
+    this.userId = uid;
+  }
   static subscribe(callback) {
     this.callbacks.push(callback);
     return this.unsubscribe(callback);
@@ -15,9 +18,8 @@ export default class DatabaseService {
       this.callbacks.splice(index, 1);
     };
   }
-  static async getEligibility(uid) {
-    this.userId = uid;
-    return fetch(`${this.urlBase}/eligibility?uid=${uid}`)
+  static async getEligibility() {
+    return fetch(`${this.urlBase}/eligibility?uid=${this.userId}`)
       .then(res => res.json())
       .then(body => {
         this.callbacks.map(callback => callback(body));
