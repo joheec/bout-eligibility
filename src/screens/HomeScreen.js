@@ -3,6 +3,8 @@ import React from 'react';
 import {
   Image,
   Platform,
+  RefreshControl,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,12 +14,29 @@ import {
 import AuthService from '../services/Auth';
 
 export default function HomeScreen({ navigation, screenProps }) {
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  function wait(timeout) {
+    return new Promise(resolve => {
+      setTimeout(resolve, timeout);
+    });
+  }
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    wait(2000).then(() => setRefreshing(false));
+  }, [refreshing]);
+
   const bouts = Object.keys(screenProps);
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <ScrollView
         style={styles.container}
-        contentContainerStyle={styles.contentContainer}>
+        contentContainerStyle={styles.contentContainer}
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View style={styles.boutsContainer}>
           {
             bouts.map(boutDate => (
@@ -37,7 +56,7 @@ export default function HomeScreen({ navigation, screenProps }) {
       <TouchableOpacity onPress={AuthService.logout} style={styles.tabBarInfoContainer}>
         <Text style={styles.tabBarInfoText}>Log Out</Text>
       </TouchableOpacity>
-    </View>
+    </SafeAreaView>
   );
 }
 
@@ -100,7 +119,7 @@ const styles = StyleSheet.create({
   },
   boutsContainer: {
     alignItems: 'center',
-    marginTop: 50,
+    marginTop: 20,
     marginBottom: 20,
   },
   getStartedContainer: {

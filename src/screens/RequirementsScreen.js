@@ -3,6 +3,8 @@ import {
   Alert,
   ActivityIndicator,
   Platform,
+  RefreshControl,
+  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,6 +14,12 @@ import {
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import DatabaseService from '../services/Database';
 
+function wait(timeout) {
+  return new Promise(resolve => {
+    setTimeout(resolve, timeout);
+  });
+}
+
 export default class RequirementsScreen extends Component {
   state = {
     isLoading: false,
@@ -19,7 +27,15 @@ export default class RequirementsScreen extends Component {
     dateSubRequirement: null,
     showDatePicker: false,
     pickerDate: new Date(),
+    refreshing: false,
   }
+
+  setRefreshing = (status) => this.setState({ refreshing: status });
+
+  onRefresh = () => {
+    this.setRefreshing(true);
+    wait(2000).then(() => this.setRefreshing(false));
+  };
 
   openDatePicker = (dateRequirement, dateSubRequirement, date) => {
     this.setState({
@@ -67,7 +83,10 @@ export default class RequirementsScreen extends Component {
       );
     }
     return (
-      <ScrollView style={styles.container}>
+      <SafeAreaView style={{ flex: 1}}>
+      <ScrollView style={styles.container}
+        refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
+      >
         <View style={{ marginBottom: 15 }}>
           <Text>{this.props.title}</Text>
           <Text>Start: {this.props.start}</Text>
@@ -133,6 +152,7 @@ export default class RequirementsScreen extends Component {
           onConfirm={this.updateDate}
         />
       </ScrollView>
+      </SafeAreaView>
     );
   }
 }
