@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Bout Eligibility",
-    "slug": "bout-eligibility",
+    "name": "Wreckers",
+    "slug": "wreckers-wreck-this",
     "privacy": "public",
     "sdkVersion": "36.0.0",
     "platforms": [
@@ -24,7 +24,11 @@
       "**/*"
     ],
     "ios": {
+      "bundleIdentifier": "com.rosecityrollers.wreckers",
       "supportsTablet": true
+    },
+    "android": {
+      "package": "com.rosecityrollers.wreckers"
     }
   }
 }
