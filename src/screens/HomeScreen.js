@@ -22,7 +22,6 @@ export default function HomeScreen({ navigation, screenProps }) {
     DatabaseService.getEligibility().then(() => setRefreshing(false));
   }, [refreshing]);
 
-  const bouts = Object.keys(screenProps);
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
@@ -33,18 +32,24 @@ export default function HomeScreen({ navigation, screenProps }) {
         }
       >
         <View style={styles.boutsContainer}>
-          {
-            bouts.map(boutDate => (
-              <TouchableOpacity
-                key={boutDate}
-                onPress={() => navigation.navigate('Bout' + boutDate)}
-              >
-                <Text style={styles.linkText}>
-                  Sat Feb 29, 2019: Wrecker vs Wrecker
-                </Text>
-              </TouchableOpacity>
-            ))
-          }
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Bout20200417')}
+          >
+            <View style={styles.boutContainer}>
+              <Text style={styles.linkText}>
+                Fri Apr 17, 2020: Wrecker vs Rat City
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Bout20200229')}
+          >
+            <View style={styles.boutContainer}>
+              <Text style={styles.linkText}>
+                Sat Feb 29, 2019: Wrecker vs Wrecker
+              </Text>
+            </View>
+          </TouchableOpacity>
         </View>
         <DevelopmentModeNotice />
       </ScrollView>
@@ -116,6 +121,9 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginTop: 20,
     marginBottom: 20,
+  },
+  boutContainer: {
+    paddingTop: 20,
   },
   getStartedContainer: {
     alignItems: 'center',

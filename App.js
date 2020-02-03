@@ -15,11 +15,13 @@ import AuthService from './src/services/Auth';
 import DatabaseService from './src/services/Database';
 
 import HomeScreen from './src/screens/HomeScreen';
+import Bout20200417Screen from './src/screens/20200417';
 import Bout20200229Screen from './src/screens/20200229';
 
 const RequirementsStack = createStackNavigator({
   Home: { screen: HomeScreen },
-  Bout20200229: {screen: Bout20200229Screen }
+  Bout20200417: {screen: Bout20200417Screen },
+  Bout20200229: {screen: Bout20200229Screen },
 });
 
 const AppNavigator = createAppContainer(RequirementsStack);

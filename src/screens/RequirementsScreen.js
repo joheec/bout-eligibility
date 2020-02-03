@@ -180,11 +180,11 @@ const Hours = ({ hours, vologistic, onUpdate }) => (
         text="In Vologistics?    "
         onUpdate={() => onUpdate('vologistic')(!vologistic)}
       />
-      <TouchableOpacity onPress={() => onUpdate('hours')(hours-1)}>
+      <TouchableOpacity onPress={() => onUpdate('hours')(hours-0.5)}>
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>-</Text>
       </TouchableOpacity>
       <Text style={{ marginHorizontal: 20 }}>{hours}</Text>
-      <TouchableOpacity onPress={() => onUpdate('hours')(hours+1)}>
+      <TouchableOpacity onPress={() => onUpdate('hours')(hours+0.5)}>
         <Text style={{ color: '#2e78b7', fontSize: 30 }}>+</Text>
       </TouchableOpacity>
     </View>
