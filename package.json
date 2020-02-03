@@ -1,4 +1,6 @@
 {
+  "name": "bout-eligibility",
+  "description": "Bout eligibility tracker",
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
     "start": "expo start",
@@ -39,5 +41,5 @@
     "babel-preset-expo": "^7.0.0",
     "jest-expo": "^36.0.0"
   },
-  "private": true
+  "version": "1.0.0"
 }
