@@ -7,8 +7,8 @@ export default ({ screenProps }) => {
     <RequirementsScreen
       boutDate={boutDate}
       title="Eligiblity Requirements: Fri Apr 17, 2020"
-      start="Mon Feb 3, 2020"
-      end="Sun Mar 29, 2020"
+      start="Fri Jan 31, 2020"
+      end="Mon Mar 23, 2020"
       {...screenProps[boutDate]}
     />
   );
