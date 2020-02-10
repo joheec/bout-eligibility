@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component, useState } from 'react';
 import {
   Alert,
   ActivityIndicator,
+  Button,
   Platform,
   RefreshControl,
   SafeAreaView,
@@ -172,24 +173,37 @@ const Event = ({ date, signin, openDatePicker, onUpdate }) => {
   );
 };
 
-const Hours = ({ hours, vologistic, onUpdate }) => (
-  <View style={{ flexDirection: 'row' }}>
-    <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-      <Checkbox
-        isDone={vologistic}
-        text="In Vologistics?    "
-        onUpdate={() => onUpdate('vologistic')(!vologistic)}
-      />
-      <TouchableOpacity onPress={() => onUpdate('hours')(hours-0.5)}>
-        <Text style={{ color: '#2e78b7', fontSize: 30 }}>-</Text>
-      </TouchableOpacity>
-      <Text style={{ marginHorizontal: 20 }}>{hours}</Text>
-      <TouchableOpacity onPress={() => onUpdate('hours')(hours+0.5)}>
-        <Text style={{ color: '#2e78b7', fontSize: 30 }}>+</Text>
-      </TouchableOpacity>
+const Hours = ({ hours, vologistic, onUpdate }) => {
+  const [time, setTime] = useState(hours);
+  const saveTime = () => onUpdate('hours')(time);
+
+  return (
+    <View style={{ flexDirection: 'row' }}>
+      <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <Checkbox
+          isDone={vologistic}
+          text="In Vologistics?    "
+          onUpdate={() => onUpdate('vologistic')(!vologistic)}
+        />
+        <TouchableOpacity onPress={() => setTime(time - 0.5)}>
+          <Text style={{ color: '#2e78b7', fontSize: 30 }}>-</Text>
+        </TouchableOpacity>
+        <Text style={{ marginHorizontal: 20, width: 30, textAlign: 'center' }}>{time}</Text>
+        <TouchableOpacity onPress={() => setTime(time + 0.5)}>
+          <Text style={{ color: '#2e78b7', fontSize: 30 }}>+</Text>
+        </TouchableOpacity>
+        <View style={{
+          marginLeft: 25,
+          borderWidth: 2,
+          borderColor: '#4289F7',
+          borderRadius: 10,
+        }}>
+          <Button title="SAVE" onPress={saveTime} />
+        </View>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 const Checkbox = ({ isDone, onUpdate, text }) => (
   <View style={{ flexDirection: 'row', alignItems: 'center' }}>
