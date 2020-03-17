@@ -32,24 +32,20 @@ export default function HomeScreen({ navigation, screenProps }) {
         }
       >
         <View style={styles.boutsContainer}>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Bout20200417')}
-          >
-            <View style={styles.boutContainer}>
-              <Text style={styles.linkText}>
-                Fri Apr 17, 2020: Wrecker vs Rat City
-              </Text>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={() => navigation.navigate('Bout20200229')}
-          >
-            <View style={styles.boutContainer}>
-              <Text style={styles.linkText}>
-                Sat Feb 29, 2019: Wrecker vs Wrecker
-              </Text>
-            </View>
-          </TouchableOpacity>
+        {
+          screenProps.map(bout => (
+            <TouchableOpacity
+              key={bout.boutId}
+              onPress={() => navigation.navigate('Bout', { boutId: bout.boutId })}
+            >
+              <View style={styles.boutContainer}>
+                <Text style={styles.linkText}>
+                  {bout.title}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        }
         </View>
         <DevelopmentModeNotice />
       </ScrollView>

@@ -18,32 +18,38 @@ export default class DatabaseService {
       this.callbacks.splice(index, 1);
     };
   }
+
+  static massageBoutData(bouts) {
+    return Object.values(bouts).sort((a, b) => b.boutId - a.boutId);
+  }
+
   static async getEligibility() {
     return fetch(`${this.urlBase}/eligibility?uid=${this.userId}`)
       .then(res => res.json())
       .then(body => {
-        this.callbacks.map(callback => callback(body));
-        return body;
+        const bouts = this.massageBoutData(body);
+        this.callbacks.map(callback => callback(bouts));
+        return bouts;
       });
     try {
     } catch (err) {
       alert(`Get Eligibility Error: ${message}`);
     }
   }
-  static async postEligibility(boutDate, data) {
+  static async postEligibility(boutId, data) {
     return fetch(`${this.urlBase}/eligibility`, {
       method: 'PUT',
       body: JSON.stringify({
         uid: this.userId,
-        boutDate,
+        boutId,
         ...data,
       }),
     })
       .then(res => res.json())
       .then(body => {
-        this.callbacks.map(callback => callback(body));
-        return body;
+        const bouts = this.massageBoutData(body);
+        this.callbacks.map(callback => callback(bouts));
+        return bouts;
       });
   }
 }
-

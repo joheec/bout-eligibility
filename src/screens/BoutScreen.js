@@ -15,7 +15,7 @@ import {
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import DatabaseService from '../services/Database';
 
-export default class RequirementsScreen extends Component {
+export default class BoutScreen extends Component {
   state = {
     isLoading: false,
     dateRequirement: null,
@@ -55,8 +55,9 @@ export default class RequirementsScreen extends Component {
   };
 
   onUpdate = (requirement) => (subRequirement) => (value) => {
+    const { boutId } = this.props.navigation.state.params;
     this.setState({ isLoading: true });
-    DatabaseService.postEligibility(this.props.boutDate, {
+    DatabaseService.postEligibility(boutId, {
       requirement,
       subRequirement,
       value
@@ -77,20 +78,23 @@ export default class RequirementsScreen extends Component {
         </View>
       );
     }
+    const { boutId } = this.props.navigation.state.params;
+    const boutData = this.props.screenProps.filter(bout => bout.boutId === boutId)[0];
+
     return (
       <SafeAreaView style={{ flex: 1}}>
       <ScrollView style={styles.container}
         refreshControl={<RefreshControl refreshing={this.state.refreshing} onRefresh={this.onRefresh} />}
       >
         <View style={{ marginBottom: 15 }}>
-          <Text>{this.props.title}</Text>
-          <Text>Start: {this.props.start}</Text>
-          <Text>End: {this.props.end}</Text>
+          <Text>Game: {boutData.title}</Text>
+          <Text>Start: {new Date(boutData.start).toDateString()}</Text>
+          <Text>End: {new Date(boutData.end).toDateString()}</Text>
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Saturday GLW Strategy Hour</Text>
           {
-            this.props.strategyHour.map((status, i) =>
+            boutData.strategyHour.map((status, i) =>
               <Event
                 { ...status }
                 key={i}
@@ -103,7 +107,7 @@ export default class RequirementsScreen extends Component {
         <View style={{ marginBottom: 15 }}>
           <Text>Any Practice</Text>
           {
-            this.props.practice.map((status, i) =>
+            boutData.practice.map((status, i) =>
               <Event
                 { ...status }
                 key={i}
@@ -116,7 +120,7 @@ export default class RequirementsScreen extends Component {
         <View style={{ marginBottom: 15 }}>
           <Text>Scrimmages</Text>
           {
-            this.props.scrimmage.map((status, i) =>
+            boutData.scrimmage.map((status, i) =>
               <Event
                 { ...status }
                 key={i}
@@ -129,14 +133,14 @@ export default class RequirementsScreen extends Component {
         <View style={{ marginBottom: 15 }}>
           <Text>Month 1: Volunteer 6 Hours</Text>
           <Hours
-            {...this.props.volunteer1}
+            {...boutData.volunteer1}
             onUpdate={this.onUpdate('volunteer1')}
           />
         </View>
         <View style={{ marginBottom: 15 }}>
           <Text>Month 2: Volunteer 6 Hours</Text>
           <Hours
-            {...this.props.volunteer2}
+            {...boutData.volunteer2}
             onUpdate={this.onUpdate('volunteer2')}
           />
         </View>

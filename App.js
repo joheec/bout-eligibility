@@ -15,13 +15,11 @@ import AuthService from './src/services/Auth';
 import DatabaseService from './src/services/Database';
 
 import HomeScreen from './src/screens/HomeScreen';
-import Bout20200417Screen from './src/screens/20200417';
-import Bout20200229Screen from './src/screens/20200229';
+import BoutScreen from './src/screens/BoutScreen';
 
 const RequirementsStack = createStackNavigator({
   Home: { screen: HomeScreen },
-  Bout20200417: {screen: Bout20200417Screen },
-  Bout20200229: {screen: Bout20200229Screen },
+  Bout: { screen: BoutScreen },
 });
 
 const AppNavigator = createAppContainer(RequirementsStack);
@@ -29,7 +27,7 @@ const AppNavigator = createAppContainer(RequirementsStack);
 export default class App extends Component {
   state = {
     isLoading: false,
-    progress: {},
+    eligibility: [],
     user: null,
     subscriptions: [],
   };
@@ -49,7 +47,7 @@ export default class App extends Component {
   }
 
   componentDidMount() {
-    const unsubscribeDatabaseChange = DatabaseService.subscribe(data => this.setState({ progress: data }));
+    const unsubscribeDatabaseChange = DatabaseService.subscribe(data => this.setState({ eligibility: data }));
     const unsubscribeAuthChange = AuthService.subscribeAuthChange(user => {
       this.setState({ user });
       if (user && user.uid) {
@@ -67,13 +65,11 @@ export default class App extends Component {
   }
 
   componentWillUnmount() {
-    if (this.state.subscriptions.length > 0) {
-      this.state.subscriptions.map(unsubscribe => unsubscribe());
-    }
+    this.state.subscriptions.map(unsubscribe => unsubscribe());
   }
 
   static getDerivedStateFromError() {
-    this.showAlert('While getting derived state for app...');
+    return Alert.alert('While getting derived state for app...');
   }
 
   render() {
@@ -94,7 +90,7 @@ export default class App extends Component {
       return (
         <View style={styles.container}>
           {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-          <AppNavigator screenProps={this.state.progress} />
+          <AppNavigator screenProps={this.state.eligibility} />
         </View>
       );
     }
